@@ -1,0 +1,38 @@
+# Calculates the new coordinates of the head of the snake.
+# NOTE: len(snake) increases. AUTOMATICALLY AS A RESULT OF THIS LINE AS IT MAKES THE WHOLE THING EASIER
+# This is taken care of later at [1] (SEE FINAL ELSE STATEMENT). IE IF THE FOOD'S NOT EATEN THEN POP OFF THE ADDITIONAL NEW LENGTH CREATED
+
+# insert is a recipe that takes 2 arguments:
+    # 1) where in the array you wish to insert
+    # 2) what you want to insert there
+# at the 'head' of the snake (i.e., position 0) we want to insert the
+# co-ordinates of the position the snake has just moved into
+
+# snake[0] is the first co-ordinate of the snake, i.e. its head
+# e.g. snake[0] >> [4, 8]
+# thus snake[0][0] gives us the snake's head's X co-ordinate (e.g. >> 4)
+# snake[0][1] gives us the Y co-ordinate (e.g. >> 8)
+
+
+
+# note that X co-ordinate increases in value as we move left to right, and that
+# Y co-ordinate increases in value as we move top to bottom
+# TODO quiz question: in which corner is the co-ordinate (0, 0)?
+    # and example co-ordinates for the other 3 corners?
+
+changeInX = 0
+changeInY = 0
+
+if key == KEY_DOWN:
+    changeInX = 1
+elif key == KEY_UP:
+    changeInX = -1
+elif key == KEY_RIGHT:
+    changeInY = -1
+elif key == KEY_LEFT:
+    changeInY = -1
+
+newX = snake[0][0] + changeInX
+newY = snake[0][1] + changeInY
+
+snake.insert(0, [newX, newY])
