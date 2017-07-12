@@ -1,13 +1,13 @@
+Possibilities
+
 - Adjust the speed setting (including start and max speed and acceleration rate)
 - Adjust the snake increase length rate
-- Show how the snake has faulted before exiting (3 seconds)
-- High score (for each session) (further extension: of all time)
-- 2 snakes (WASD) whereby you blame the head if it interferes with the other
-  (Further extension: head on head collision, the bigger snake wins)
-- Death if snake backs on to itself; remove this
-- Holding down a key will speed game up; eliminate this
-- Adjust the window dimensions. This fails. Why? Adjust. (Further extension:
-  global setting of window dimensions to refer to.)
+- Show the player for 3 seconds how the snake has faulted before exiting the game
+- High score (for each session) (further extension: record an all-time high score)
+- Have 2 snakes (the second could be controlled by the following 4 keys: WASD) playing the game at the same time. If the snakes bump into each other, then it's game over! (Further extension: could you figure out which snake is to 'blame' for each collision?)
+- It's game over if the snake tries to move back onto itself... remove this
+- Holding down a key will speed game up; remove this
+- Adjust the window dimensions. This causes the game not to play properly. Why? Change this. (Further extension: use static initial variables to set the window size.)
 - Allow the user to choose starting position and direction of snake
-- NB if you edit the code, make sure you edit/remove irrelevant comments, and
-  add helpful ones!
+
+Note: if you edit the code, make sure you edit/remove irrelevant comments, and add helpful ones!
