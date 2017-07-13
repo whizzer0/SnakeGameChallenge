@@ -1,0 +1,7 @@
+Check against the next lesson's file to see if you have typed everything correctly.
+
+Check specifically if the line you have typed is a comment (#) or not.
+
+Check the console error output if the program fails. Maybe it is pointing you to a specific line of code?
+
+You can escape the program by pressing 'Ctrl + C'. Or alternatively, close and restart the terminal (don't forget to navigate back to where your snake project folder is in the terminal!).

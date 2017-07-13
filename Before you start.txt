@@ -1,0 +1,17 @@
+Download the snake game to a folder of your choice
+
+Open your terminal
+
+Navigate to inside the project folder of the snake game
+
+Ensure that you can run python scripts from your terminal, e.g. type python snake_result.py to see the final, completed version of the game. Typing python anyfile.py in the terminal will run that file, useful to see if you have completed each lesson successfully!
+
+Progress through each lesson in turn, or make a copy of snake_result.py to play around with. There are a series of Extensions which are unguided once you are comfortable with the contents of the lessons, but use your own imagination to adapt the game.
+
+For each lesson, start with the relevant file, e.g. snake_lesson_1.py, which on completion should look like the same code as the start of the next lesson, i.e. snake_lesson_2.py
+
+When filling in code during the lessons, start the typing at exactly the indentation that the # TODO is at
+
+Look at the 'Debugging tips' card if you are stuck with a nasty error!
+
+As you are doing the lessons, try to read all the comments & code in between sections you are editing... it will help you understand what is going on in the code you are just about to change!
