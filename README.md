@@ -6,7 +6,7 @@ This is a set of programming tasks that will allow a young developer to understa
 
 There are 8 'lessons', ranging in difficulty and length, at the end of which you should have a fully working snake game!
 
-Thank you to the original version of the snake game which I have adapted, from (sanchitgangwar)[https://gist.github.com/sanchitgangwar/2158089].
+Thank you to the original version of the snake game which I have adapted, from [sanchitgangwar](https://gist.github.com/sanchitgangwar/2158089).
 
 Each lesson will require you to type out code, but don't worry, it's all provided for you!
 
