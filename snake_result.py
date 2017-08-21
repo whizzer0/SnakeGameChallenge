@@ -11,7 +11,7 @@ from random import randint
 import time
 
 # Constants to adjust the game difficulty
-INIT_WIN_SIZE = (1,1) #Set the window size (width,height)
+INIT_WIN_SIZE = (49,60) #Set the window size (width,height)
 INIT_LENGTH = 3 #Change the initial length of the snake
 INIT_SPEED = INIT_LENGTH #This also sets the initial speed of the snake
 INIT_P2 = True #Enable second snake controlled with WASD
@@ -29,7 +29,6 @@ curses.noecho()
 curses.curs_set(0)
 # draw a border for our window
 win.border(0)
-win.nodelay(1)
 
 # Key constants
 KEY_ESC = 27 #Escape key reference number for the computer system
@@ -37,11 +36,15 @@ KEY_W = 119
 KEY_A = 97
 KEY_S = 115
 KEY_D = 100
+KEY_Q = 113
+KEY_E = 101
+KEY_DOT = 46
+KEY_SLASH = 47
 VALID_KEYS = [KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN, KEY_ESC, KEY_W, KEY_A, KEY_S, KEY_D] #The keys that are used to control the game
-OPP_KEY = {KEY_RIGHT:KEY_LEFT, KEY_LEFT:KEY_RIGHT, KEY_UP:KEY_DOWN, KEY_DOWN:KEY_UP, KEY_W:KEY_S, KEY_S:KEY_W, KEY_A:KEY_D, KEY_D:KEY_A} #A dict of opposite keys to prevent backtracking
+OPP_KEY = {KEY_RIGHT:KEY_LEFT, KEY_LEFT:KEY_RIGHT, KEY_UP:KEY_DOWN, KEY_DOWN:KEY_UP, KEY_W:KEY_S, KEY_S:KEY_W, KEY_A:KEY_D, KEY_D:KEY_A, KEY_Q:KEY_E, KEY_E:KEY_Q, KEY_DOT:KEY_SLASH, KEY_SLASH:KEY_DOT} #A dict of opposite keys to prevent backtracking
 
 if not INIT_P2:
-    VALID_KEYS = [KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN, KEY_ESC] #The keys that are used to control the game with only 1 player
+    VALID_KEYS = [KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN, KEY_ESC, KEY_Q, KEY_E, KEY_DOT, KEY_SLASH] #The keys that are used to control the game with only 1 player
 
 ################################################################################
 # INITIALISING VALUES BEFORE THE GAME STARTS
@@ -52,12 +55,12 @@ if not INIT_P2:
 # Snake is being placed here approximately in the middle left of our window
 snake = []
 for y in range(0, INIT_LENGTH):
-	snake.append([int(INIT_WIN_SIZE[0] / 5), int(INIT_WIN_SIZE[0] / 6)+INIT_LENGTH-y])
+	snake.append([int(INIT_WIN_SIZE[0] / 5), int(INIT_WIN_SIZE[0] / 6)+INIT_LENGTH-y, 1])
 
 if INIT_P2:
     snake2 = []
     for y in range(0, INIT_LENGTH):
-	    snake2.append([int(INIT_WIN_SIZE[0] / 5) * 2, int(INIT_WIN_SIZE[0] / 6)+INIT_LENGTH-y])
+	    snake2.append([int(INIT_WIN_SIZE[0] / 5) * 2, int(INIT_WIN_SIZE[0] / 6)+INIT_LENGTH-y, 2])
 
 # Initial snake direction
 # Snake will move in direction of last arrow key pressed, but initially we will
@@ -75,7 +78,7 @@ score = 0
 def new_food():
     food = []
     while food == []:
-        food = [randint(1, INIT_WIN_SIZE[0] - 2), randint(1, INIT_WIN_SIZE[1] - 2)]
+        food = [randint(1, INIT_WIN_SIZE[0] - 2), randint(1, INIT_WIN_SIZE[1] - 2), randint(0,9)]
         # reset food if it's been randomly assigned a co-ordinate that a
         # snake is currently occupying
         if food in snake:
@@ -91,7 +94,7 @@ food = new_food()
 # Display the food
 # 'win' represents where we are playing our game.
 # 'addch' will add a single character based on co-ordinates it receives
-win.addch(food[0], food[1], '*')
+win.addch(food[0], food[1], str(food[2]))
 
 ################################################################################
 # THE MAIN GAME LOOP (Lesson 1)
@@ -142,7 +145,8 @@ while True:
     # we will update our active key pressed selection:
     if event != -1:
         key = event
-
+        key_sleep = True
+    
     # Pause/Resume game (Lesson 6)
     # If SPACE BAR is pressed, then wait for another SPACE BAR to be pressed to
     # resume game.
@@ -202,9 +206,15 @@ while True:
         newX += 1
     elif key == KEY_LEFT:
         newX -= 1
-
+    
+    newZ = snake[0][2]
+    if key == KEY_SLASH:
+        newZ += 1
+    elif key == KEY_DOT:
+        newZ -= 1
+    
     # Put new snakehead co-ordinates into start of snake array (position 0)
-    snake.insert(0, [newY, newX])
+    snake.insert(0, [newY, newX, newZ])
     # ...Snake is now longer than it should be - unless we're about to eat a
     # piece of fruit (Lesson 5). If we decide later on that we're not eating a
     # piece of fruit, we must remember to reduce the snake length by cutting off
@@ -223,9 +233,15 @@ while True:
             newX += 1
         elif key2 == KEY_A:
             newX -= 1
+        
+        newZ = snake[0][2]
+        if key == KEY_E:
+            newZ += 1
+        elif key == KEY_Q:
+            newZ -= 1
 
         # Put new snakehead co-ordinates into start of snake array (position 0)
-        snake2.insert(0, [newY, newX])
+        snake2.insert(0, [newY, newX, newZ])
 
     ###
     # IF SNAKE REACHES BORDER, MAKE IT ENTER FROM OTHER SIDE (Lesson 3)
@@ -244,6 +260,10 @@ while True:
         snake[0][0] = 1
     if snake[0][1] == INIT_WIN_SIZE[1] - 1:
         snake[0][1] = 1
+    if snake[0][2] == 9:
+        snake[0][2] == 0
+    if snake[0][2] == 0:
+        snake[0][2] == 8
     if INIT_P2:
         if snake2[0][0] == 0:
             snake2[0][0] = INIT_WIN_SIZE[0] - 2
@@ -253,6 +273,10 @@ while True:
             snake2[0][0] = 1
         if snake2[0][1] == INIT_WIN_SIZE[1] - 1:
             snake2[0][1] = 1
+        if snake2[0][2] == 9:
+            snake2[0][2] == 0
+        if snake2[0][2] == 0:
+            snake2[0][2] == 8
 
 
     ###
@@ -303,7 +327,7 @@ while True:
         # calculate new food position
         food = new_food()
         # update display with new food
-        win.addch(food[0], food[1], '*')
+        win.addch(food[0], food[1], str(food[2]))
     else:
         # [1] If snake does not eat food, remember to decrease its length
         # remove last snake co-ordinate (its 'tail') from snake array
@@ -321,7 +345,7 @@ while True:
             # calculate new food position
             food = new_food()
             # update display with new food
-            win.addch(food[0], food[1], '*')
+            win.addch(food[0], food[1], str(food[2]))
         else:
             # [1] If snake does not eat food, remember to decrease its length
             # remove last snake co-ordinate (its 'tail') from snake array
@@ -337,12 +361,12 @@ while True:
 
     # We can write the head with a '@' character, and ensure those parts that
     # are (no longer) the head are drawn as body ('#')
-    win.addch(snake[1][0], snake[1][1], '#')
-    win.addch(snake[0][0], snake[0][1], '1')
+    win.addch(snake[1][0], snake[1][1], str(snake[1][2]))
+    win.addch(snake[0][0], snake[0][1], str(snake[0][2]))
     
     if INIT_P2:
-        win.addch(snake2[1][0], snake2[1][1], '#')
-        win.addch(snake2[0][0], snake2[0][1], '2')
+        win.addch(snake2[1][0], snake2[1][1], str(snake2[1][2]))
+        win.addch(snake2[0][0], snake2[0][1], str(snake[0][2]))
 
 
 #### End of main game loop ###
