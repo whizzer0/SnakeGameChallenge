@@ -8,6 +8,7 @@
 import curses
 from curses import KEY_RIGHT, KEY_LEFT, KEY_UP, KEY_DOWN
 from random import randint
+from time import sleep
 
 # Initialise cursor and window properties
 curses.initscr()
@@ -244,6 +245,11 @@ while key != KEY_ESC:
 ################################################################################
 # END OF GAME
 ################################################################################
+
+# Show how the player lost for 3 seconds
+win.addstr(0, 27, " YOU LOSE ")
+win.getch()
+sleep(3)
 
 # Close window
 curses.endwin()
