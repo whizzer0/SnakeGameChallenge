@@ -24,6 +24,9 @@ win.nodelay(1)
 # Escape key reference number for the computer system
 KEY_ESC = 27
 
+# A dict of opposite keys to prevent backtracking
+OPP_KEY = {KEY_RIGHT:KEY_LEFT, KEY_LEFT:KEY_RIGHT, KEY_UP:KEY_DOWN, KEY_DOWN:KEY_UP}
+
 # Constants to adjust the game difficulty
 INIT_LENGTH = 6 #Change the initial length of the snake
 INIT_SPEED = INIT_LENGTH #This also sets the initial speed of the snake
@@ -134,9 +137,8 @@ while key != KEY_ESC:
 
     # Ignore useless key selections
     # Ignore the latest key press if it is not an arrow key (or Esc key)
-    if key not in [KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN, KEY_ESC]:
+    if key not in [KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN, KEY_ESC] or key == OPP_KEY[prevKey]:
         key = prevKey
-
 
     ###
     # CALCULATE NEW SNAKEHEAD POSITION (Lesson 2)
