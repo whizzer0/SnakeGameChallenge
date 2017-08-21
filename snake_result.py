@@ -239,28 +239,33 @@ while key != KEY_ESC:
 
     # [1:] refers to position 1 (i.e., the 2nd element in the array, as we
     # count from 0) and onwards.
-    if snake[0] in snake[1:]:
-        if INIT_P2:
-            lose_string = " P1  FAIL "
-            lose_string_e = " HIT SELF "
-        else:
-            lose_string = " YOU LOSE "
-            lose_string_e = " INS COIN "
-        break
     
     if INIT_P2:
-        if snake2[0] in snake2[1:]:
+        if snake[0] in snake[1:]:
+            lose_string = " P1  FAIL "
+            lose_string_e = " HIT SELF "
+            break
+        elif snake2[0] in snake2[1:]:
             lose_string = " P2  FAIL "
             lose_string_e = " HIT SELF "
             break
-        if snake[0] in snake2:
+        elif snake[0] in snake2 and snake2[0] in snake:
+            lose_string = " YOU LOSE "
+            lose_string_e = " BOTH HIT "
+            break
+        elif snake[0] in snake2:
             lose_string = " P1  FAIL "
             lose_string_e = "  HIT P2  "
             break
-        if snake2[0] in snake:
+        elif snake2[0] in snake:
             lose_string = " P2  FAIL "
             lose_string_e = "  HIT P1  "
             break
+    else:
+        if snake[0] in snake[1:]:
+            lose_string = " YOU LOSE "
+            lose_string_e = " INS COIN "
+        break
 
     ###
     # CHECK IF SNAKE HAS EATEN FOOD (Lessons 2 + 3)
@@ -348,9 +353,19 @@ for tim in range(1,6):
 # Close window
 curses.endwin()
 
+with open("highscore.txt", "r+") as score_file:
+    score_high = int(score_file.read())
+    if score_high < score:
+        print("New high score! Previous high score: " + str(score_high))
+        score_file.seek(0)
+        score_file.write(str(score))
+        score_file.truncate()
+    else:
+        print("High score: " + str(score_high))
+
 # Print out score and thank you message
 # Each print command will print its message to a new line
-print("Final score: " + str(score))
+print("Your score: " + str(score))
 print("Thank you for playing!")
 
 
