@@ -23,6 +23,9 @@ win.nodelay(1)
 # Escape key reference number for the computer system
 KEY_ESC = 27
 
+# Constants to adjust the game difficulty
+INIT_LENGTH = 6 #Change the initial length of the snake
+INIT_SPEED = INIT_LENGTH #This also sets the initial speed of the snake
 
 ################################################################################
 # INITIALISING VALUES BEFORE THE GAME STARTS
@@ -31,7 +34,9 @@ KEY_ESC = 27
 # Initial snake co-ordinates
 # Co-ordinates are y-coordinate, then x-coordinate.
 # Snake is being placed here approximately in the middle left of our window
-snake = [[4,10], [4,9], [4,8]]
+snake = []
+for y in range(0, min(48,INIT_LENGTH)):
+	snake.append([4, 10+min(48,INIT_LENGTH)-y])
 
 # Initial snake direction
 # Snake will move in direction of last arrow key pressed, but initially we will
@@ -79,7 +84,7 @@ while key != KEY_ESC:
 
     # Each time the score increases by 1, we will increase the speed level by 2
     # Therefore, speedSetting is double the score value:
-    speedSetting = 2 * score
+    speedSetting = 2 * INIT_SPEED + 2 * score
 
     # We want to limit the speed level to our max, which is 120
     if speedSetting > 120:
