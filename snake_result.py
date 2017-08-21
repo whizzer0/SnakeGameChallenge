@@ -26,6 +26,7 @@ KEY_ESC = 27
 # Constants to adjust the game difficulty
 INIT_LENGTH = 6 #Change the initial length of the snake
 INIT_SPEED = INIT_LENGTH #This also sets the initial speed of the snake
+INCR_LENGTH = 2 #Change how much the length of the snake increases after eating food
 
 ################################################################################
 # INITIALISING VALUES BEFORE THE GAME STARTS
@@ -87,8 +88,7 @@ while key != KEY_ESC:
     speedSetting = 2 * INIT_SPEED + 2 * score
 
     # We want to limit the speed level to our max, which is 120
-    if speedSetting > 120:
-        speedSetting = 120
+    speedSetting = min(120, speedSetting)
 
     # The higher the speed level, the less time it will take for our program
     # to update the latest snake movement, and therefore the game will play
@@ -135,39 +135,40 @@ while key != KEY_ESC:
     # Ignore the latest key press if it is not an arrow key (or Esc key)
     if key not in [KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN, KEY_ESC]:
         key = prevKey
+    
+    for char in range(1, INCR_LENGTH+1):
+        
+        ###
+        # CALCULATE NEW SNAKEHEAD POSITION (Lesson 2)
+        ###
 
+        # Current key selection should now be an arrow key. This arrow key, plus
+        # the snakehead's current position, can be used to calculate the new
+        # co-ordinates for the snakehead as it moves one 'square'.
 
-    ###
-    # CALCULATE NEW SNAKEHEAD POSITION (Lesson 2)
-    ###
+        # The snake is an array of 2-length arrays, e.g. = [[4,10], [4,9], [4,8]] -
+        # this is also known as a 3D array.
+        # snake[0][0] accesses the snakehead's y-coordinate (e.g., '4')
+        # snake[0][1] accesses the snakehead's x-coordinate (e.g., '10')
+        
+        newY = snake[0][0]
+        if key == KEY_DOWN:
+            newY += char
+        elif key == KEY_UP:
+            newY -= char
 
-    # Current key selection should now be an arrow key. This arrow key, plus
-    # the snakehead's current position, can be used to calculate the new
-    # co-ordinates for the snakehead as it moves one 'square'.
+        newX = snake[0][1]
+        if key == KEY_RIGHT:
+            newX += char
+        elif key == KEY_LEFT:
+            newX -= char
 
-    # The snake is an array of 2-length arrays, e.g. = [[4,10], [4,9], [4,8]] -
-    # this is also known as a 3D array.
-    # snake[0][0] accesses the snakehead's y-coordinate (e.g., '4')
-    # snake[0][1] accesses the snakehead's x-coordinate (e.g., '10')
-
-    newY = snake[0][0]
-    if key == KEY_DOWN:
-        newY += 1
-    elif key == KEY_UP:
-        newY -= 1
-
-    newX = snake[0][1]
-    if key == KEY_RIGHT:
-        newX += 1
-    elif key == KEY_LEFT:
-        newX -= 1
-
-    # Put new snakehead co-ordinates into start of snake array (position 0)
-    snake.insert(0, [newY, newX])
-    # ...Snake is now longer than it should be - unless we're about to eat a
-    # piece of fruit (Lesson 5). If we decide later on that we're not eating a
-    # piece of fruit, we must remember to reduce the snake length by cutting off
-    # its tail. See [1].
+        # Put new snakehead co-ordinates into start of snake array (position 0)
+        snake.insert(0, [newY, newX])
+        # ...Snake is now longer than it should be - unless we're about to eat a
+        # piece of fruit (Lesson 5). If we decide later on that we're not eating a
+        # piece of fruit, we must remember to reduce the snake length by cutting off
+        # its tail. See [1].
 
 
     ###
@@ -220,12 +221,13 @@ while key != KEY_ESC:
         # update display with new food
         win.addch(food[0], food[1], '*')
     else:
-        # [1] If snake does not eat food, remember to decrease its length
-        # remove last snake co-ordinate (its 'tail') from snake array
-        last = snake.pop()
+        for char in range(0,INCR_LENGTH):
+            # [1] If snake does not eat food, remember to decrease its length
+            # remove last snake co-ordinate (its 'tail') from snake array
+            last = snake.pop()
 
-        # update display where snaketail has just been removed
-        win.addch(last[0], last[1], ' ')
+            # update display where snaketail has just been removed
+            win.addch(last[0], last[1], ' ')
 
 
     ###
@@ -234,7 +236,8 @@ while key != KEY_ESC:
 
     # We can write the head with a '@' character, and ensure those parts that
     # are (no longer) the head are drawn as body ('#')
-    win.addch(snake[1][0], snake[1][1], '#')
+    for char in range(1,INCR_LENGTH):
+        win.addch(snake[1][0], snake[1][1], '#')
     win.addch(snake[0][0], snake[0][1], '@')
 
 
