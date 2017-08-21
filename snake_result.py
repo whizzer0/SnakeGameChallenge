@@ -8,7 +8,7 @@
 import curses
 from curses import KEY_RIGHT, KEY_LEFT, KEY_UP, KEY_DOWN
 from random import randint
-from time import sleep
+import time
 
 # Initialise cursor and window properties
 curses.initscr()
@@ -25,11 +25,12 @@ win.nodelay(1)
 KEY_ESC = 27
 
 # A dict of opposite keys to prevent backtracking
-OPP_KEY = {KEY_RIGHT:KEY_LEFT, KEY_LEFT:KEY_RIGHT, KEY_UP:KEY_DOWN, KEY_DOWN:KEY_UP}
+OPP_KEY = {KEY_RIGHT:KEY_LEFT, KEY_LEFT:KEY_RIGHT, KEY_UP:KEY_DOWN, KEY_DOWN:KEY_UP, }
 
 # Constants to adjust the game difficulty
 INIT_LENGTH = 6 #Change the initial length of the snake
 INIT_SPEED = INIT_LENGTH #This also sets the initial speed of the snake
+INIT_P2 = True #Enable second snake controlled with WASD
 
 ################################################################################
 # INITIALISING VALUES BEFORE THE GAME STARTS
@@ -41,6 +42,11 @@ INIT_SPEED = INIT_LENGTH #This also sets the initial speed of the snake
 snake = []
 for y in range(0, min(48,INIT_LENGTH)):
 	snake.append([4, 10+min(48,INIT_LENGTH)-y])
+
+if INIT_P2:
+    snake2 = []
+    for y in range(0, min(48,INIT_LENGTH)):
+	    snake2.append([6, 10+min(48,INIT_LENGTH)-y])
 
 # Initial snake direction
 # Snake will move in direction of last arrow key pressed, but initially we will
@@ -249,16 +255,21 @@ while key != KEY_ESC:
 ################################################################################
 
 # Show how the player lost for 3 seconds
-win.addstr(0, 27, " YOU LOSE ")
-win.getch()
-sleep(3)
+start_time = time.time()
+for tim in range(1,6):
+    while start_time + tim > time.time():
+        if tim % 2 == 0:
+            win.addstr(0, 27, " INS COIN ")
+        else:
+            win.addstr(0, 27, " YOU LOSE ", curses.A_STANDOUT)
+        win.getch()
 
 # Close window
 curses.endwin()
 
 # Print out score and thank you message
 # Each print command will print its message to a new line
-print("Final score - " + str(score))
+print("Final score: " + str(score))
 print("Thank you for playing!")
 
 
