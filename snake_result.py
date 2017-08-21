@@ -58,6 +58,7 @@ if INIT_P2:
 # Snake will move in direction of last arrow key pressed, but initially we will
 # set this to right arrow key (so snake starts moving left to right)
 key = KEY_RIGHT
+key2 = KEY_D
 
 # First food co-ordinates (Lesson 4)
 food = [10,20]
@@ -81,7 +82,7 @@ score = 0
 # A 'while' loop will repeatedly execute until its stated condition is met, OR
 # a 'break' statement is executed inside of it. Each loop iteration will execute
 # one movement of the snake and update the game display accordingly. The
-# condition that breaks this while loop is the user pressing the Esc key. which
+# condition that breaks this while loop is the user pressing the Esc key, which
 # will end the game.
 
 while key != KEY_ESC:
@@ -151,6 +152,9 @@ while key != KEY_ESC:
     # Ignore the latest key press if it is not an arrow key (or Esc key)
     if key not in VALID_KEYS or key == OPP_KEY[prevKey]:
         key = prevKey
+    elif key in [KEY_W, KEY_A, KEY_S, KEY_D]:
+        key2 = key
+        key = prevKey
 
     ###
     # CALCULATE NEW SNAKEHEAD POSITION (Lesson 2)
@@ -187,15 +191,15 @@ while key != KEY_ESC:
     #Do the same thing for the second snake if we have one.
     if INIT_P2:
         newY = snake2[0][0]
-        if key == KEY_S:
+        if key2 == KEY_S:
             newY += 1
-        elif key == KEY_W:
+        elif key2 == KEY_W:
             newY -= 1
 
         newX = snake2[0][1]
-        if key == KEY_D:
+        if key2 == KEY_D:
             newX += 1
-        elif key == KEY_A:
+        elif key2 == KEY_A:
             newX -= 1
 
         # Put new snakehead co-ordinates into start of snake array (position 0)
@@ -230,7 +234,7 @@ while key != KEY_ESC:
 
 
     ###
-    # IF SNAKE CROSSES ITSELF (Lesson 2)
+    # IF SNAKE CROSSES ITSELF OR ANOTHER SNAKE
     ###
 
     # [1:] refers to position 1 (i.e., the 2nd element in the array, as we
@@ -306,7 +310,7 @@ while key != KEY_ESC:
     win.addch(snake[0][0], snake[0][1], '@')
     
     if INIT_P2:
-        win.addch(snake2[1][0], snake2[1][1], '#')
+        win.addch(snake2[1][0], snake2[1][1], '£')
         win.addch(snake2[0][0], snake2[0][1], '@')
 
 
