@@ -28,7 +28,7 @@ KEY_A = 97
 KEY_S = 115
 KEY_D = 100
 VALID_KEYS = [KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN, KEY_ESC, KEY_W, KEY_A, KEY_S, KEY_D] #The keys that are used to control the game
-OPP_KEY = {KEY_RIGHT:KEY_LEFT, KEY_LEFT:KEY_RIGHT, KEY_UP:KEY_DOWN, KEY_DOWN:KEY_UP, KEY_W:KEY_A, KEY_A:KEY_W, KEY_S:KEY_D, KEY_D:KEY_S} #A dict of opposite keys to prevent backtracking
+OPP_KEY = {KEY_RIGHT:KEY_LEFT, KEY_LEFT:KEY_RIGHT, KEY_UP:KEY_DOWN, KEY_DOWN:KEY_UP, KEY_W:KEY_S, KEY_S:KEY_W, KEY_A:KEY_D, KEY_D:KEY_A} #A dict of opposite keys to prevent backtracking
 
 # Constants to adjust the game difficulty
 INIT_LENGTH = 6 #Change the initial length of the snake
@@ -150,7 +150,7 @@ while key != KEY_ESC:
 
     # Ignore useless key selections
     # Ignore the latest key press if it is not an arrow key (or Esc key)
-    if key not in VALID_KEYS or key == OPP_KEY[prevKey]:
+    if key not in VALID_KEYS or key == OPP_KEY[prevKey] or key == OPP_KEY[key2]:
         key = prevKey
     elif key in [KEY_W, KEY_A, KEY_S, KEY_D]:
         key2 = key
@@ -240,12 +240,26 @@ while key != KEY_ESC:
     # [1:] refers to position 1 (i.e., the 2nd element in the array, as we
     # count from 0) and onwards.
     if snake[0] in snake[1:]:
+        if INIT_P2:
+            lose_string = " P1  FAIL "
+            lose_string_e = " HIT SELF "
+        else:
+            lose_string = " YOU LOSE "
+            lose_string_e = " INS COIN "
         break
     
     if INIT_P2:
         if snake2[0] in snake2[1:]:
+            lose_string = " P2  FAIL "
+            lose_string_e = " HIT SELF "
             break
-        if snake[0] in snake2 or snake2[0] in snake:
+        if snake[0] in snake2:
+            lose_string = " P1  FAIL "
+            lose_string_e = "  HIT P2  "
+            break
+        if snake2[0] in snake:
+            lose_string = " P2  FAIL "
+            lose_string_e = "  HIT P1  "
             break
 
     ###
@@ -307,11 +321,11 @@ while key != KEY_ESC:
     # We can write the head with a '@' character, and ensure those parts that
     # are (no longer) the head are drawn as body ('#')
     win.addch(snake[1][0], snake[1][1], '#')
-    win.addch(snake[0][0], snake[0][1], '@')
+    win.addch(snake[0][0], snake[0][1], '1')
     
     if INIT_P2:
-        win.addch(snake2[1][0], snake2[1][1], '£')
-        win.addch(snake2[0][0], snake2[0][1], '@')
+        win.addch(snake2[1][0], snake2[1][1], '#')
+        win.addch(snake2[0][0], snake2[0][1], '2')
 
 
 #### End of main game loop ###
@@ -326,9 +340,9 @@ start_time = time.time()
 for tim in range(1,6):
     while start_time + tim > time.time():
         if tim % 2 == 0:
-            win.addstr(0, 27, " INS COIN ")
+            win.addstr(0, 27, lose_string_e)
         else:
-            win.addstr(0, 27, " YOU LOSE ", curses.A_STANDOUT)
+            win.addstr(0, 27, lose_string, curses.A_STANDOUT)
         win.refresh()
 
 # Close window
